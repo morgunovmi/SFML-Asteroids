@@ -3,11 +3,9 @@
 #include <random>
 #include <memory>
 #include <list>
+#include <unordered_set>
 
 using namespace sf;
-
-const int W = 1200;
-const int H = 800;
 
 class Animation {
 private:
@@ -18,9 +16,9 @@ private:
 public:
     Animation() {}
 
-    Animation(Texture& t, int x, int y, int width, int height, int count, float Speed) {
+    Animation(Texture& t, int x, int y, int width, int height, int count, float _speed) {
         frame = 0;
-        speed = Speed;
+        speed = _speed;
 
         for (int i = 0; i < count; i++) {
             frames.push_back(IntRect(x + i * width, y, width, height));
@@ -50,21 +48,22 @@ public:
 
 class Entity {
 public:
-    float x, y, dx, dy, R, angle;
+    float x, y, dx, dy, r, angle, windowWidth, windowHeight;
     bool isAlive;
     std::string name;
     Animation animation;
+    std::default_random_engine rnd;
 
     Entity() {
         isAlive = true;
     }
 
-    void settings(Animation& a, float X, float Y, float Angle = 0, float radius = 1.f) {
+    void settings(Animation& a, float _x, float _y, float _angle = 0, float radius = 1.f) {
         animation = a;
-        x = X;
-        y = Y;
-        angle = Angle;
-        R = radius;
+        x = _x;
+        y = _y;
+        angle = _angle;
+        r = radius;
     }
 
     virtual void update() {};
@@ -75,10 +74,10 @@ public:
         sprite.setRotation(angle + 90);
         app.draw(sprite);
 
-        CircleShape circle(R);
+        CircleShape circle(r);
         circle.setFillColor(Color(255, 0, 0, 170));
         circle.setPosition(x, y);
-        circle.setOrigin(R, R);
+        circle.setOrigin(r, r);
         //app.draw(circle);
     }
 
@@ -88,8 +87,10 @@ public:
 
 class Asteroid : public Entity {
 public:
-    Asteroid() {
+    Asteroid(std::default_random_engine& dre, float width, float height) {
         name = "asteroid";
+        windowWidth = width;
+        windowHeight = height;
 
         dx = static_cast<float>(uid(dre));
         dy = static_cast<float>(uid(dre));
@@ -99,48 +100,51 @@ public:
         x += dx;
         y += dy;
 
-        if (x > W) x = 0;  if (x < 0) x = W;
-        if (y > H) y = 0;  if (y < 0) y = H;
+        if (x > windowWidth) x = 0;  if (x < 0) x = windowWidth;
+        if (y > windowHeight) y = 0;  if (y < 0) y = windowHeight;
     }
 private:
-    std::random_device rd{};
-    std::default_random_engine dre{ rd() };
     std::uniform_int_distribution<> uid{ -4, 4 };
-
 };
 
 
 class Bullet : public Entity {
 public:
-    Bullet() {
+    Bullet(std::default_random_engine& dre, float width, float height) {
         name = "bullet";
+        windowWidth = width;
+        windowHeight = height;
+
+        rnd = dre;
     }
 
     void update() {
         float degtorad = 0.017453f;
         dx = cos(angle * degtorad) * 6;
         dy = sin(angle * degtorad) * 6;
-        angle += uid(dre);  /*try this*/
+        angle += uid(rnd);  /*try this*/
         x += dx;
         y += dy;
 
-        if (x > W || x < 0 || y > H || y < 0) isAlive = false;
+        if (x > windowWidth || x < 0 || y > windowHeight || y < 0) isAlive = false;
     }
 
 private:
-    std::random_device rd{};
-    std::default_random_engine dre{ rd() };
     std::uniform_int_distribution<> uid{ -4, 4 };
-
 };
 
 
 class Player : public Entity {
 public:
     bool thrust;
+    int numLives = 5;
 
-    Player() {
+    Player(float width, float height) {
         name = "player";
+        windowWidth = width;
+        windowHeight = height;
+        dx = 0;
+        dy = 0;
     }
 
     void update() {
@@ -163,8 +167,8 @@ public:
         x += dx;
         y += dy;
 
-        if (x > W) x = 0; if (x < 0) x = W;
-        if (y > H) y = 0; if (y < 0) y = H;
+        if (x > windowWidth) x = 0; if (x < 0) x = windowWidth;
+        if (y > windowHeight) y = 0; if (y < 0) y = windowHeight;
     }
 
 };
@@ -173,12 +177,14 @@ public:
 bool isCollide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
     return (b->x - a->x) * (b->x - a->x) +
         (b->y - a->y) * (b->y - a->y) <
-        (a->R + b->R) * (a->R + b->R);
+        (a->r + b->r) * (a->r + b->r);
 }
 
 
 int main() {
-    RenderWindow app(VideoMode(W, H), "Asteroids!");
+    float windowWidth = 1280;
+    float windowHeight = 720;
+    RenderWindow app(VideoMode(static_cast<unsigned int>(windowWidth), static_cast<unsigned int>(windowHeight)), "Asteroids!");
     app.setFramerateLimit(60);
 
     Texture t1, t2, t3, t4, t5, t6, t7;
@@ -186,7 +192,7 @@ int main() {
     t2.loadFromFile("images/background.jpg");
     t3.loadFromFile("images/explosions/type_C.png");
     t4.loadFromFile("images/rock.png");
-    t5.loadFromFile("images/fire_blue.png");
+    t5.loadFromFile("images/fire_red.png");
     t6.loadFromFile("images/rock_small.png");
     t7.loadFromFile("images/explosions/type_B.png");
 
@@ -209,20 +215,42 @@ int main() {
 
     std::random_device rd;
     std::default_random_engine dre{ rd() };
-    std::uniform_real_distribution<float> w_uid{ 0, W };
-    std::uniform_real_distribution<float> h_uid{ 0, H };
-    std::uniform_real_distribution<float> c_uid{ 0, 360 };
+    std::uniform_real_distribution<float> urdWidth{ 0, windowWidth };
+    std::uniform_real_distribution<float> urdHeight{ 0, windowHeight };
+    std::uniform_real_distribution<float> urd360{ 0, 360 };
 
     for (int i = 0; i < 15; i++) {
-        auto a = std::make_shared<Asteroid>();
-        a->settings(sRock, w_uid(dre), h_uid(dre), c_uid(dre), 25);
+        auto a = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
+        a->settings(sRock, urdWidth(dre), urdHeight(dre), urd360(dre), 25);
         entities.push_back(a);
     }
 
-    auto p = std::make_shared<Player>();
-    p->settings(sPlayer, 200, 200, 0, 20);
+    auto p = std::make_shared<Player>(windowWidth, windowHeight);
+    p->settings(sPlayer, windowWidth / 2, windowHeight / 2, 0, 20);
     entities.push_back(p);
+    
+    Text livesText;
+    Font font;
+    font.loadFromFile("fonts/aero.ttf");
+    livesText.setFont(font);
+    livesText.setCharacterSize(35);
+    livesText.setFillColor(Color::White);
+    livesText.setString("Lives left: " + std::to_string(p->numLives));
+    
+    int playerScore = 0;
+    Text scoreText;
+    scoreText.setFont(font);
+    scoreText.setCharacterSize(35);
+    scoreText.setFillColor(Color::White);
+    scoreText.setString("Score: " + std::to_string(playerScore));
+    scoreText.setPosition(0, 40);
 
+    Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setCharacterSize(50);
+    gameOverText.setFillColor(Color::Red);
+	gameOverText.setPosition(windowWidth / 2 - 50, windowHeight / 2 - 20);
+    
     /////main loop/////
     while (app.isOpen()) {
         Event event;
@@ -237,18 +265,22 @@ int main() {
                 }
 
                 if (event.key.code == Keyboard::Space) {
-                    auto b = std::make_shared<Bullet>();
-                    b->settings(sBullet, p->x, p->y, p->angle, 10);
-                    entities.push_back(b);
+                    if (p->isAlive) {
+                        auto b = std::make_shared<Bullet>(dre, windowWidth, windowHeight);
+                        b->settings(sBullet, p->x, p->y, p->angle, 10);
+                        entities.push_back(b);
+                    }
                 }
             }
         }
 
-        if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) p->angle += 3;
-        if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))  p->angle -= 3;
-        if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) p->thrust = true;
-        else p->thrust = false;
+        if (p->isAlive) {
+            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) p->angle += 3;
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))  p->angle -= 3;
 
+            if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) p->thrust = true;
+            else p->thrust = false;
+        }
 
         for (auto a : entities) {
             for (auto b : entities) {
@@ -262,11 +294,16 @@ int main() {
                         e->name = "explosion";
                         entities.push_back(e);
 
+                        if (p->isAlive) {
+                            if (a->r == 15) playerScore += 20;
+                            else playerScore += 10;
+                            scoreText.setString("Score: " + std::to_string(playerScore));
+                        }
 
                         for (int i = 0; i < 2; i++) {
-                            if (a->R == 15) continue;
-                            auto e = std::make_shared<Asteroid>();
-                            e->settings(sRock_small, a->x, a->y, c_uid(dre), 15);
+                            if (a->r == 15) continue;
+                            auto e = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
+                            e->settings(sRock_small, a->x, a->y, urd360(dre), 15);
                             entities.push_back(e);
                         }
 
@@ -282,8 +319,17 @@ int main() {
                         e->name = "explosion";
                         entities.push_back(e);
 
-                        p->settings(sPlayer, W / 2, H / 2, 0, 20);
+                        p->settings(sPlayer, windowWidth / 2, windowHeight / 2, 0, 20);
                         p->dx = 0; p->dy = 0;
+
+                        p->numLives--;
+                        livesText.setString("Lives left: " + std::to_string(p->numLives));
+                        if (p->numLives == 0) {
+                            p->isAlive = false;
+                            gameOverText.setString("Game Over\nFinal Score: " + std::to_string(playerScore));
+                            livesText.setString("");
+                            scoreText.setString("");
+                        }
                     }
                 }
             }
@@ -300,10 +346,10 @@ int main() {
             }
         }
 
-        std::uniform_int_distribution uid_150{ 0, 150 };
-        if (uid_150(dre) == 0) {
-            auto a = std::make_shared<Asteroid>();
-            a->settings(sRock, 0, h_uid(dre), c_uid(dre), 25);
+        std::uniform_int_distribution uid150{ 0, 150 };
+        if (uid150(dre) == 0) {
+            auto a = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
+            a->settings(sRock, 0, urdHeight(dre), urd360(dre), 25);
             entities.push_back(a);
         }
 
@@ -321,6 +367,9 @@ int main() {
         //////draw//////
         app.draw(background);
         for (auto i : entities) i->draw(app);
+        app.draw(livesText);
+        app.draw(scoreText);
+        app.draw(gameOverText);
         app.display();
     }
 
