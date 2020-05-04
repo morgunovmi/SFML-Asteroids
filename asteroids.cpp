@@ -2,7 +2,6 @@
 #include <time.h>
 #include <random>
 #include <memory>
-#include <list>
 #include <unordered_set>
 
 using namespace sf;
@@ -210,7 +209,7 @@ int main() {
     Animation sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5f);
 
 
-    std::list<std::shared_ptr<Entity>> entities;
+    std::unordered_set<std::shared_ptr<Entity>> entities;
 
 
     std::random_device rd;
@@ -222,12 +221,12 @@ int main() {
     for (int i = 0; i < 15; i++) {
         auto a = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
         a->settings(sRock, urdWidth(dre), urdHeight(dre), urd360(dre), 25);
-        entities.push_back(a);
+        entities.insert(a);
     }
 
     auto p = std::make_shared<Player>(windowWidth, windowHeight);
     p->settings(sPlayer, windowWidth / 2, windowHeight / 2, 0, 20);
-    entities.push_back(p);
+    entities.insert(p);
     
     Text livesText;
     Font font;
@@ -268,7 +267,7 @@ int main() {
                     if (p->isAlive) {
                         auto b = std::make_shared<Bullet>(dre, windowWidth, windowHeight);
                         b->settings(sBullet, p->x, p->y, p->angle, 10);
-                        entities.push_back(b);
+                        entities.insert(b);
                     }
                 }
             }
@@ -292,7 +291,7 @@ int main() {
                         auto e = std::make_shared<Entity>();
                         e->settings(sExplosion, a->x, a->y);
                         e->name = "explosion";
-                        entities.push_back(e);
+                        entities.insert(e);
 
                         if (p->isAlive) {
                             if (a->r == 15) playerScore += 20;
@@ -304,7 +303,7 @@ int main() {
                             if (a->r == 15) continue;
                             auto e = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
                             e->settings(sRock_small, a->x, a->y, urd360(dre), 15);
-                            entities.push_back(e);
+                            entities.insert(e);
                         }
 
                     }
@@ -317,7 +316,7 @@ int main() {
                         auto e = std::make_shared<Entity>();
                         e->settings(sExplosion_ship, a->x, a->y);
                         e->name = "explosion";
-                        entities.push_back(e);
+                        entities.insert(e);
 
                         p->settings(sPlayer, windowWidth / 2, windowHeight / 2, 0, 20);
                         p->dx = 0; p->dy = 0;
@@ -350,7 +349,7 @@ int main() {
         if (uid150(dre) == 0) {
             auto a = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
             a->settings(sRock, 0, urdHeight(dre), urd360(dre), 25);
-            entities.push_back(a);
+            entities.insert(a);
         }
 
         for (auto i = entities.begin(); i != entities.end();) {
