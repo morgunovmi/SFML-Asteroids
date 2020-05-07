@@ -12,9 +12,9 @@ private:
 
 public:
     Animation() {}
-    Animation(Texture& t, int x, int y, int width, int height, int count, float speed);
+    Animation(const Texture& t, const int x, const int y, const int width, const int height, const int count, const float speed);
 
-    Sprite getSprite() { return mSprite; }
+    const Sprite getSprite() const { return mSprite; }
 
     void update();
     bool isEnd();

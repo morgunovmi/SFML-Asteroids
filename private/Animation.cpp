@@ -1,6 +1,8 @@
-#include "Animation.hpp"
+#include "../public/Animation.hpp"
 
-Animation::Animation(Texture& t, int x, int y, int width, int height, int count, float speed) {
+Animation::Animation(
+    const Texture& t, const int x, const int y, const int width, const int height, const int count, const float speed) {
+    
     mFrame = 0;
     mSpeed = speed;
 

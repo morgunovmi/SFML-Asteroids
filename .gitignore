@@ -3,3 +3,4 @@
 *.vcxproj
 Debug/*
 x64/*
+Release/*

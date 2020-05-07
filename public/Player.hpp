@@ -7,7 +7,7 @@ public:
     int mNumLives = 5;
 
 public:
-    Player(float width, float height);
+    Player(const float width, const float height);
 
     void update();
 };

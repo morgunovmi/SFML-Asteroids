@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "public/Game.hpp"
 
 //bool isCollide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
 //    return (b->mX - a->mX) * (b->mX - a->mX) +

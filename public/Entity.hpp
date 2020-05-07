@@ -16,7 +16,7 @@ public:
 
     Entity() : mIsAlive(true) {}
 
-    void settings(Animation& a, float x, float y, float angle = 0, float radius = 1.f);
+    void settings(const Animation& a, const float x, const float y, const float angle = 0, const float radius = 1.f);
     
     virtual void update() {};
 

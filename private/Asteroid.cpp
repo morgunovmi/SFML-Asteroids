@@ -1,6 +1,6 @@
-#include "Asteroid.hpp"
+#include "../public/Asteroid.hpp"
 
-Asteroid::Asteroid(std::default_random_engine& dre, float width, float height) {
+Asteroid::Asteroid(std::default_random_engine& dre, const float width, const float height) {
     mName = "asteroid";
     mWindowWidth = width;
     mWindowHeight = height;

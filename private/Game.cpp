@@ -1,4 +1,5 @@
-#include "Game.hpp"
+#include <iostream>
+#include "../public/Game.hpp"
 
 const bool Game::isCollide(const std::shared_ptr<Entity> a, const std::shared_ptr<Entity> b) const {
     return (b->mX - a->mX) * (b->mX - a->mX) +
@@ -21,13 +22,6 @@ void Game::initialize() {
     t2.setSmooth(true);
 
     background.setTexture(t2);
-	sExplosion = Animation{ t3, 0, 0, 256, 256, 48, 0.5f };
-    sRock = Animation{ t4, 0, 0, 64, 64, 16, 0.2f };
-	sRock_small = Animation{ t6, 0, 0, 64, 64, 16, 0.2f };
-	sBullet = Animation{ t5, 0, 0, 32, 64, 16, 0.8f };
-	sPlayer = Animation{ t1, 40, 0, 40, 40, 1, 0 };
-    sPlayer_go = Animation{ t1, 40, 40, 40, 40, 1, 0 };
-	sExplosion_ship = Animation{ t7, 0, 0, 192, 192, 64, 0.5f };
 
     for (int i = 0; i < 15; i++) {
         auto a = std::make_shared<Asteroid>(dre, windowWidth, windowHeight);
@@ -39,8 +33,6 @@ void Game::initialize() {
     p->settings(sPlayer, windowWidth / 2, windowHeight / 2, 0, 20);
     entities.insert(p);
 
-
-    Font font;
     font.loadFromFile("fonts/aero.ttf");
 
     livesText.setFont(font);
@@ -60,53 +52,33 @@ void Game::initialize() {
     gameOverText.setPosition(windowWidth / 2 - 50, windowHeight / 2 - 20);
 }
 
-void Game::handleKeyPressed(const Keyboard::Key code) {
-    if (code == Keyboard::Escape) {
-        app.close();
-    }
-
-    if (p->mIsAlive) {
-        switch (code) {
-        case Keyboard::Space:
-            if (p->mIsAlive) {
-                auto b = std::make_shared<Bullet>(dre, windowWidth, windowHeight);
-                b->settings(sBullet, p->mX, p->mY, p->mAngle, 10);
-                entities.insert(b);
-            }
-            break;
-        case Keyboard::Right:
-        case Keyboard::D:
-            p->mAngle += 3;
-            break;
-        case Keyboard::Left:
-        case Keyboard::A:
-            p->mAngle -= 3;
-            break;
-        case Keyboard::Up:
-        case Keyboard::W:
-            p->mThrust = true;
-            break;
-        default:
-            p->mThrust = false;
-            break;
-        }
-    }
-}
-
 void Game::handleEvents() {
     Event event;
     while (app.pollEvent(event)) {
-        switch (event.type) {
-        case Event::Closed:
+        if (event.type == Event::Closed) {
             app.close();
-            break;
-        case Event::KeyPressed:
-            handleKeyPressed(event.key.code);
-            break;
-        default:
-            break;
+        }
+
+        if (event.type == Event::KeyPressed) {
+            if (event.key.code == Keyboard::Escape) {
+                app.close();
+            }
+
+            if (event.key.code == Keyboard::Space) {
+                if (p->mIsAlive) {
+                    auto b = std::make_shared<Bullet>(dre, windowWidth, windowHeight);
+                    b->settings(sBullet, p->mX, p->mY, p->mAngle, 10);
+                    entities.insert(b);
+                }
+            }
         }
     }
+
+    if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) p->mAngle += 3;
+    if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))  p->mAngle -= 3;
+
+    if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) p->mThrust = true;
+    else p->mThrust = false;
 }
 
 void Game::handleCollisions() {
@@ -194,13 +166,14 @@ void Game::update() {
 }
 
 void Game::draw() {
+    app.clear();
     app.draw(background);
     for (auto i : entities) {
         i->draw(app);
     }
 
-    app.draw(livesText);
     app.draw(scoreText);
+    app.draw(livesText);
     app.draw(gameOverText);
     app.display();
 }

@@ -1,6 +1,7 @@
-#include "Bullet.hpp"
+#include "../public/Bullet.hpp"
+#include <iostream>
 
-Bullet::Bullet(std::default_random_engine& dre, float width, float height) {
+Bullet::Bullet(const std::default_random_engine& dre, const float width, const float height) {
     mName = "bullet";
     mWindowWidth = width;
     mWindowHeight = height;

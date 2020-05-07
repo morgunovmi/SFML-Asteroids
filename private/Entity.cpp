@@ -1,6 +1,6 @@
-#include "Entity.hpp"
+#include "../public/Entity.hpp"
 
-void Entity::settings(Animation& a, float x, float y, float angle, float radius) {
+void Entity::settings(const Animation& a, const float x, const float y, const float angle, const float radius) {
     mAnimation = a;
     mX = x;
     mY = y;

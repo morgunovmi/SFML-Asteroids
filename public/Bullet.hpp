@@ -6,6 +6,6 @@ private:
     std::uniform_int_distribution<> mAngleDistribution{ -4, 4 };
 
 public:
-    Bullet(std::default_random_engine& dre, float width, float height);
+    Bullet(const std::default_random_engine& dre, const float width, const float height);
     void update();
 };
