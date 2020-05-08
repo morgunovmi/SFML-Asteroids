@@ -4,7 +4,7 @@ int main() {
     float windowWidth = 1280;
     float windowHeight = 720;
 
-    Game game{ windowWidth, windowHeight };
+    ast::Game game{ windowWidth, windowHeight };
     game.play();
 
     return 0;

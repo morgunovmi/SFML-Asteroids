@@ -1,21 +1,29 @@
 #include "../public/Bullet.hpp"
+#include <cmath>
 #include <iostream>
 
-Bullet::Bullet(const std::default_random_engine& dre, const float width, const float height) {
-    mName = "bullet";
-    mWindowWidth = width;
-    mWindowHeight = height;
+namespace ast {
+    Bullet::Bullet(const std::default_random_engine& mDre, const float width, const float height,
+        const Animation& a, const float x, const float y, const float angle, const float radius) :
+        Entity(a, x, y, angle, radius) {
 
-    mRand = dre;
-}
+        mName = BULLET;
+        mWindowWidth = width;
+        mWindowHeight = height;
 
-void Bullet::update() {
-    float degtorad = 0.017453f;
-    mDx = cos(mAngle * degtorad) * 6;
-    mDy = sin(mAngle * degtorad) * 6;
-    mAngle += mAngleDistribution(mRand);  /*try this*/
-    mX += mDx;
-    mY += mDy;
+        mRand = mDre;
+    }
 
-    if (mX > mWindowWidth || mX < 0 || mY > mWindowHeight || mY < 0) mIsAlive = false;
+    void Bullet::update() {
+        Entity::update();
+        mDx = std::cos(mAngle * degtorad) * 6;
+        mDy = std::sin(mAngle * degtorad) * 6;
+        mAngle += mAngleDistribution(mRand);  
+        mX += mDx;
+        mY += mDy;
+
+        if (mX > mWindowWidth || mX < 0 || mY > mWindowHeight || mY < 0) {
+            mIsAlive = false;
+        }
+    }
 }

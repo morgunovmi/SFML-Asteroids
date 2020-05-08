@@ -2,20 +2,19 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-using namespace sf;
+namespace ast {
+    class Animation {
+    private:
+        float mFrame, mSpeed;
+        sf::Sprite mSprite;
+        std::vector<sf::IntRect> mFrames;
 
-class Animation {
-private:
-    float mFrame, mSpeed;
-    Sprite mSprite;
-    std::vector<IntRect> mFrames;
+    public:
+        Animation(const sf::Texture& t, const int x, const int y, const int width, const int height, const int count, const float speed);
 
-public:
-    Animation() {}
-    Animation(const Texture& t, const int x, const int y, const int width, const int height, const int count, const float speed);
+        const sf::Sprite sprite() const { return mSprite; }
 
-    const Sprite getSprite() const { return mSprite; }
-
-    void update();
-    bool isEnd();
-};
+        void update();
+        const bool isEnd() const;
+    };
+}

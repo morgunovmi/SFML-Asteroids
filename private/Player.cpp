@@ -1,33 +1,59 @@
 #include "../public/Player.hpp"
+#include <cmath>
 
-Player::Player(const float width, const float height) {
-    mName = "player";
-    mWindowWidth = width;
-    mWindowHeight = height;
-    mDx = 0;
-    mDy = 0;
-}
+namespace ast {
+    Player::Player(const float width, const float height,
+        const Animation& a, const float x, const float y, const float angle, const float radius) :
+        Entity(a, x, y, angle, radius) {
 
-void Player::update() {
-    if (mThrust) {
-        float degtorad = 0.017453f;
-        mDx += cos(mAngle * degtorad) * 0.17f;
-        mDy += sin(mAngle * degtorad) * 0.17f;
-    } else {
-        mDx *= 0.99f;
-        mDy *= 0.99f;
+        mName = PLAYER;
+        mWindowWidth = width;
+        mWindowHeight = height;
+        mDx = 0;
+        mDy = 0;
     }
 
-    float maxSpeed = 12.f;
-    float speed = sqrt(mDx * mDx + mDy * mDy);
-    if (speed > maxSpeed) {
-        mDx *= maxSpeed / speed;
-        mDy *= maxSpeed / speed;
+    void Player::reset(const Animation& a, const float x, const float y, const float angle, const float radius) {
+        mAnimation = a;
+        mX = x;
+        mY = y;
+        mAngle = angle;
+        mR = radius;
+        mDx = 0;
+        mDy = 0;
     }
 
-    mX += mDx;
-    mY += mDy;
+    void Player::update() {
+        Entity::update();
 
-    if (mX > mWindowWidth) mX = 0; if (mX < 0) mX = mWindowWidth;
-    if (mY > mWindowHeight) mY = 0; if (mY < 0) mY = mWindowHeight;
+        if (mThrust) {
+            mDx += std::cos(mAngle * degtorad) * mAcceleration;
+            mDy += std::sin(mAngle * degtorad) * mAcceleration;
+        } else {
+            mDx *= mDrag;
+            mDy *= mDrag;
+        }
+
+        float speed = std::sqrt(mDx * mDx + mDy * mDy);
+        if (speed > mMaxSpeed) {
+            mDx *= mMaxSpeed / speed;
+            mDy *= mMaxSpeed / speed;
+        }
+
+        mX += mDx;
+        mY += mDy;
+
+        if (mX > mWindowWidth) {
+            mX = 0;
+        }
+        if (mX < 0) {
+            mX = mWindowWidth;
+        }
+        if (mY > mWindowHeight) {
+            mY = 0;
+        }
+        if (mY < 0) {
+            mY = mWindowHeight;
+        }
+    }
 }

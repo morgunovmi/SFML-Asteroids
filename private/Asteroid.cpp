@@ -1,18 +1,35 @@
 #include "../public/Asteroid.hpp"
 
-Asteroid::Asteroid(std::default_random_engine& dre, const float width, const float height) {
-    mName = "asteroid";
-    mWindowWidth = width;
-    mWindowHeight = height;
+namespace ast {
+    Asteroid::Asteroid(std::default_random_engine& mDre, const float width, const float height,
+        const Animation& a, const float x, const float y, const float angle, const float radius) :
+        Entity(a, x, y, angle, radius) {
 
-    mDx = static_cast<float>(mSpeedDistribution(dre));
-    mDy = static_cast<float>(mSpeedDistribution(dre));
-}
+        mName = ASTEROID;
+        mWindowWidth = width;
+        mWindowHeight = height;
 
-void Asteroid::update() {
-    mX += mDx;
-    mY += mDy;
+        mDx = static_cast<float>(mSpeedDistribution(mDre));
+        mDy = static_cast<float>(mSpeedDistribution(mDre));
+    }
 
-    if (mX > mWindowWidth) mX = 0;  if (mX < 0) mX = mWindowWidth;
-    if (mY > mWindowHeight) mY = 0;  if (mY < 0) mY = mWindowHeight;
+    void Asteroid::update() {
+        Entity::update();
+
+        mX += mDx;
+        mY += mDy;
+
+        if (mX > mWindowWidth) {
+            mX = 0.f;
+        }
+        if (mX < 0.f) {
+            mX = mWindowWidth;
+        }
+        if (mY > mWindowHeight) {
+            mY = 0.f;
+        }
+        if (mY < 0.f) {
+            mY = mWindowHeight;
+        }
+    }
 }
