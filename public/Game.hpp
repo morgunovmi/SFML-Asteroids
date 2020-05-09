@@ -2,9 +2,9 @@
 #include <memory>
 #include <unordered_set>
 #include "Animation.hpp"
-#include "Entity.hpp"
 #include "Asteroid.hpp"
 #include "Bullet.hpp"
+#include "Entity.hpp"
 #include "Player.hpp"
 
 namespace ast {

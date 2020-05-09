@@ -1,16 +1,16 @@
 #include "../public/Asteroid.hpp"
 
 namespace ast {
-    Asteroid::Asteroid(std::default_random_engine& mDre, const float width, const float height,
-        const Animation& a, const float x, const float y, const float angle, const float radius) :
+    Asteroid::Asteroid(std::default_random_engine& mDre, float width, float height,
+        const Animation& a, float x, float y, float angle, float radius) :
         Entity(a, x, y, angle, radius) {
 
         mName = ASTEROID;
         mWindowWidth = width;
         mWindowHeight = height;
 
-        mDx = static_cast<float>(mSpeedDistribution(mDre));
-        mDy = static_cast<float>(mSpeedDistribution(mDre));
+        mDx = mSpeedDistribution(mDre);
+        mDy = mSpeedDistribution(mDre);
     }
 
     void Asteroid::update() {

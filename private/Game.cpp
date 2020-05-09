@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 #include "../public/Game.hpp"
 
 namespace ast {
@@ -38,7 +37,7 @@ namespace ast {
         mEntities.insert(mPlayer);
 
         if (!mFont.loadFromFile("fonts/aero.ttf")) {
-            std::cerr << "Error loading font" << std::endl;
+            std::cerr << "Error loading font\n";
         }
 
         mLivesText.setFont(mFont);
@@ -135,7 +134,7 @@ namespace ast {
                         e->setName(EXPLOSION);
                         mEntities.insert(e);
 
-                        mPlayer->reset(mPlayerAnimation, mWindowWidth / 2, mWindowHeight / 2, 0, 20);
+                        mPlayer->reset(mPlayerAnimation, mWindowWidth / 2, mWindowHeight / 2, 0);
 
                         mPlayer->setLives(mPlayer->lives() - 1);
                         mLivesText.setString("Lives left: " + std::to_string(mPlayer->lives()));
@@ -169,7 +168,6 @@ namespace ast {
         std::uniform_int_distribution uid150{ 0, 150 };
         if (uid150(mDre) == 0) {
             auto a = std::make_shared<Asteroid>(
-
                 mDre, mWindowWidth, mWindowHeight, mRockAnimation, 0, mUrdHeight(mDre), mUrd360(mDre), 25);
             mEntities.insert(a);
         }
@@ -178,7 +176,6 @@ namespace ast {
             std::shared_ptr<Entity> e = *i;
 
             e->update();
-            //e->animation.update();
 
             if (!e->isAlive()) {
                 i = mEntities.erase(i);

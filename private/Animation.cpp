@@ -2,7 +2,7 @@
 
 namespace ast {
     Animation::Animation(
-        const sf::Texture& t, const int x, const int y, const int width, const int height, const int count, const float speed) :
+        const sf::Texture& t, int x, int y, int width, int height, int count, float speed) :
         mFrame(0), mSpeed(speed) {
 
         for (int i = 0; i < count; i++) {

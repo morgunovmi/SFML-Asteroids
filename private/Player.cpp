@@ -1,9 +1,9 @@
-#include "../public/Player.hpp"
 #include <cmath>
+#include "../public/Player.hpp"
 
 namespace ast {
-    Player::Player(const float width, const float height,
-        const Animation& a, const float x, const float y, const float angle, const float radius) :
+    Player::Player(float width, float height,
+        const Animation& a, float x, float y, float angle, float radius) :
         Entity(a, x, y, angle, radius) {
 
         mName = PLAYER;
@@ -13,12 +13,11 @@ namespace ast {
         mDy = 0;
     }
 
-    void Player::reset(const Animation& a, const float x, const float y, const float angle, const float radius) {
+    void Player::reset(const Animation& a, float x, float y, float angle) {
         mAnimation = a;
         mX = x;
         mY = y;
         mAngle = angle;
-        mR = radius;
         mDx = 0;
         mDy = 0;
     }
@@ -27,8 +26,8 @@ namespace ast {
         Entity::update();
 
         if (mThrust) {
-            mDx += std::cos(mAngle * degtorad) * mAcceleration;
-            mDy += std::sin(mAngle * degtorad) * mAcceleration;
+            mDx += std::cos(mAngle * mDegtorad) * mAcceleration;
+            mDy += std::sin(mAngle * mDegtorad) * mAcceleration;
         } else {
             mDx *= mDrag;
             mDy *= mDrag;

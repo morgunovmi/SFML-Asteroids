@@ -1,6 +1,6 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <random>
+#include <SFML/Graphics.hpp>
 #include "Animation.hpp"
 
 namespace ast {
@@ -14,8 +14,7 @@ namespace ast {
         std::default_random_engine mRand;
 
     public:
-
-        Entity(const Animation& a, const float x, const float y, const float angle = 0.f, const float radius = 1.f)
+        Entity(const Animation& a, float x, float y, float angle = 0.f, float radius = 1.f)
             : mX(x), mY(y), mAngle(angle), mR(radius), mIsAlive(true), mAnimation(a) {}
 
         const float x() const { return mX; }
