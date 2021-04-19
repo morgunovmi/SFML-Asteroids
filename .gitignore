@@ -1,3 +1,4 @@
+# Ignore all Visual Studio stuff
 *.vcxproj.filters
 *.vcxproj.user
 *.vcxproj
