@@ -3,7 +3,7 @@
 #include "Entity.hpp"
 
 namespace ast {
-    class Asteroid : public Entity {
+    class Asteroid final : public Entity {
     private:
         std::uniform_real_distribution<float> mSpeedDistribution{ -4.f, 4.f };
 

@@ -2,7 +2,7 @@
 #include "Entity.hpp"
 
 namespace ast {
-    class Player : public Entity {
+    class Player final : public Entity {
     private:
         bool mThrust = false;
         size_t mNumLives = 5;

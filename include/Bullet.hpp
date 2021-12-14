@@ -2,7 +2,7 @@
 #include "Entity.hpp"
 
 namespace ast {
-    class Bullet : public Entity {
+    class Bullet final : public Entity {
     private:
         const float mDegtorad = 0.017453f;
         std::uniform_real_distribution<float> mAngleDistribution{ -2.f, 2.f };
