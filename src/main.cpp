@@ -1,4 +1,4 @@
-#include "public/Game.hpp"
+#include "../include/Game.hpp"
 
 int main() {
     float windowWidth = 1280;

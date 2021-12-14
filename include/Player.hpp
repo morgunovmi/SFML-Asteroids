@@ -15,10 +15,10 @@ namespace ast {
         Player(float width, float height, 
             const Animation& a, float x, float y, float angle = 0.f, float radius = 1.f);
 
-        const bool thrust() const { return mThrust; }
+        bool thrust() const { return mThrust; }
         void setThrust(const bool thrust) { mThrust = thrust; }
         
-        const size_t lives() const { return mNumLives; }
+        size_t lives() const { return mNumLives; }
         void setLives(const size_t lives) { mNumLives = lives; }
 
         void reset(const Animation& a, float x, float y, float angle);

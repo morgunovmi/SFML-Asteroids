@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
-#include "../public/Bullet.hpp"
+
+#include "../include/Bullet.hpp"
 
 namespace ast {
     Bullet::Bullet(const std::default_random_engine& mDre, float width, float height,

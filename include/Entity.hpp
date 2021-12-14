@@ -14,15 +14,18 @@ namespace ast {
         std::default_random_engine mRand;
 
     public:
-        Entity(const Animation& a, float x, float y, float angle = 0.f, float radius = 1.f)
-            : mX(x), mY(y), mAngle(angle), mR(radius), mIsAlive(true), mAnimation(a) {}
+        Entity(const Animation& a, float x, float y,
+                float angle = 0.f, float radius = 1.f)
+            : mX(x), mY(y), mDx(), mDy(), mR(radius), mAngle(angle),
+            mWindowWidth(), mWindowHeight(), 
+            mIsAlive(true), mName(ASTEROID), mAnimation(a), mRand() {}
 
-        const float x() const { return mX; }
-        const float y() const { return mY; }
-        const float radius() const { return mR; }
-        const float angle() const { return mAngle; }
-        const bool isAlive() const { return mIsAlive; }
-        const eName name() const { return mName; }
+        float x() const { return mX; }
+        float y() const { return mY; }
+        float radius() const { return mR; }
+        float angle() const { return mAngle; }
+        bool isAlive() const { return mIsAlive; }
+        eName name() const { return mName; }
         const Animation animation() const { return mAnimation; }
 
         void setAngle(const float angle) { mAngle = angle; }

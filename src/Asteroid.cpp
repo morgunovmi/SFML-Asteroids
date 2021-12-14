@@ -1,4 +1,4 @@
-#include "../public/Asteroid.hpp"
+#include "../include/Asteroid.hpp"
 
 namespace ast {
     Asteroid::Asteroid(std::default_random_engine& mDre, float width, float height,

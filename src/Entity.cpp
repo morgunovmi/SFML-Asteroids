@@ -1,4 +1,4 @@
-#include "../public/Entity.hpp"
+#include "../include/Entity.hpp"
 
 namespace ast {
     void Entity::draw(sf::RenderWindow& app) {

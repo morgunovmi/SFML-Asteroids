@@ -15,6 +15,6 @@ namespace ast {
         const sf::Sprite sprite() const { return mSprite; }
 
         void update();
-        const bool isEnd() const;
+        bool isEnd() const;
     };
 }
