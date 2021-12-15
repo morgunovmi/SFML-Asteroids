@@ -5,5 +5,4 @@
 Debug/*
 x64/*
 Release/*
-asteroids
-obj/
+build/
