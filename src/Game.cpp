@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../include/Game.hpp"
+#include "Game.hpp"
 
 namespace ast {
     bool Game::isCollide(const std::shared_ptr<Entity> a,

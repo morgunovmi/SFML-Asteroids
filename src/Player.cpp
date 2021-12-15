@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "../include/Player.hpp"
+#include "Player.hpp"
 
 namespace ast {
     Player::Player(float width, float height,

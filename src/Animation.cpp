@@ -1,4 +1,4 @@
-#include "../include/Animation.hpp"
+#include "Animation.hpp"
 
 namespace ast {
     Animation::Animation(
