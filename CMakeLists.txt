@@ -45,7 +45,6 @@ if(WIN32 OR WIN64)
         ${APP_NAME} PRIVATE
         ${SANITIZER_FLAGS}
         ${SFML_LIBS}
-        OpenGL::GLX
         )
 else()
     target_link_libraries(
