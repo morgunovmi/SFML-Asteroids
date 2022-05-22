@@ -1,4 +1,4 @@
-target_sources(Asteroids PRIVATE 
+target_sources(${APP_NAME} PRIVATE 
     Animation.cpp
     Asteroid.cpp
     Bullet.cpp
