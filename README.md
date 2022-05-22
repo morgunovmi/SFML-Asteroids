@@ -13,24 +13,23 @@ These build instructions are for a release build and assume you have Cmake insta
 Steps for Windows(x64):
 
 ```
-git clone https://github.com/morgunovmi/PrimeApp.git
-cd PrimeApp
+git clone https://github.com/morgunovmi/SFML-Asteroids.git
+cd SFML-Asteroids
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=path-to-vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows ..
 cmake --build . --config=Release
-..\bin\Release\Release\App.exe
+..\bin\Release\Release\AsteroidsApp.exe
 ```
 
 Steps for Linux(x64):
 
 ```
-git clone https://github.com/morgunovmi/PrimeApp.git
-cd PrimeApp
+git clone https://github.com/morgunovmi/SFML-Asteroids.git
+cd SFML-Asteroids
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=path-to-vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-linux ..
 cmake --build .
-..\bin\Release\App.exe
-
+..\bin\Release\AsteroidsApp.exe
 ```
