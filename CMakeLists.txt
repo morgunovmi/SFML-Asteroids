@@ -24,6 +24,12 @@ find_package(OpenGL)
 
 set(SFML_LIBS sfml-graphics sfml-system sfml-window)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    if(WIN32 OR WIN64)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+    endif()
+endif()
+
 set(APP_NAME "AsteroidsApp")
 add_executable(${APP_NAME} "")
 add_subdirectory(src)
